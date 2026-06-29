@@ -1,0 +1,8 @@
+{
+    "require": {
+        "aws/aws-sdk-php": "^3.320",
+        "cloudinary/cloudinary_php": "^2",
+        "vimeo/vimeo-api": "^3.0",
+        "mailchimp/marketing": "^3.0"
+    }
+}
