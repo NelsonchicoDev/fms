@@ -1,29 +1,38 @@
-<!--====================================================
-TOP
-======================================================-->
-
-
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark" id="top">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark shadow-sm" id="top" aria-label="Navegación principal">
   <div class="container">
+
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link active" href="/">File Manager System</a>
+        <a class="nav-link active fw-bold" href="/" aria-current="page">
+          <i class="bi bi-folder2-open me-1"></i> FMS
+        </a>
       </li>
     </ul>
 
-    <?php if (isset($_SESSION["admin"])): ?>
+    <div class="d-flex align-items-center">
+      <?php
+      /*=============================================
+      Validamos de forma estricta que la sesión exista y tenga datos
+      =============================================*/
+      if (!empty($_SESSION["admin"])):
+      ?>
 
-    	<div class="d-flex">
-	    	<a href="/logout" class="ms-auto px-3 text-white">Logout</a>
-	    </div>
+        <span class="text-secondary me-3 d-none d-sm-block">
+          <small><i class="bi bi-person-circle"></i> Admin</small>
+        </span>
 
-    <?php else: ?>
+        <a href="/logout" class="btn btn-outline-light btn-sm ms-auto px-3" title="Cerrar Sesión">
+          <i class="bi bi-box-arrow-right me-1"></i> Salir
+        </a>
 
-	 	<div class="d-flex">
-	    	<a href="#myLogin" class="ms-auto px-3 text-white" data-bs-toggle="modal">Login</a>
-	    </div>
-    	
-    <?php endif ?>
-   
+      <?php else: ?>
+
+        <a href="#myLogin" class="btn btn-primary btn-sm ms-auto px-3 shadow-sm" data-bs-toggle="modal" title="Iniciar Sesión">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Entrar
+        </a>
+
+      <?php endif; ?>
+    </div>
+
   </div>
 </nav>
