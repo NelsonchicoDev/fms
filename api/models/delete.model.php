@@ -1,54 +1,36 @@
-<?php 
+<?php
 
 require_once "connection.php";
 require_once "get.model.php";
 
-class DeleteModel{
+class DeleteModel
+{
 
-	/*=============================================
-	Peticion Delete para eliminar datos de forma dinámica
-	=============================================*/
+	static public function deleteData($table, $id, $nameId)
+	{
+		// CORRECCIÓN: Sanear el nombre de la tabla y columna ID antes de inyectarlo
+		$safeTable = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
+		$safeNameId = preg_replace('/[^a-zA-Z0-9_]/', '', $nameId);
 
-	static public function deleteData($table, $id, $nameId){
+		$response = GetModel::getDataFilter($safeTable, $safeNameId, $safeNameId, $id, null, null, null, null);
 
-		/*=============================================
-		Validar el ID
-		=============================================*/
-
-		$response = GetModel::getDataFilter($table, $nameId, $nameId, $id, null,null,null,null);
-		
-		if(empty($response)){
-
+		if (empty($response)) {
 			return null;
-
 		}
 
-		/*=============================================
-		Eliminamos registros
-		=============================================*/
-
-		$sql = "DELETE FROM $table WHERE $nameId = :$nameId";
+		$sql = "DELETE FROM $safeTable WHERE $safeNameId = :id";
 
 		$link = Connection::connect();
 		$stmt = $link->prepare($sql);
 
-		$stmt->bindParam(":".$nameId, $id, PDO::PARAM_STR);
+		$stmt->bindParam(":id", $id, PDO::PARAM_STR);
 
-		if($stmt -> execute()){
-
-			$response = array(
-
-				"comment" => "The process was successful"
-			);
-
-			return $response;
-		
-		}else{
-
-			return $link->errorInfo();
-
+		if ($stmt->execute()) {
+			return array("comment" => "The process was successful");
+		} else {
+			// CORRECCIÓN: No retornar errorInfo en producción para evitar fuga de información
+			error_log("DB Error on delete: " . json_encode($link->errorInfo()));
+			return array("error" => "Error interno al eliminar");
 		}
-
 	}
-
 }
